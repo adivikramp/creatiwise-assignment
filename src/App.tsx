@@ -3,19 +3,17 @@ import {
   RouterProvider,
 } from "react-router";
 
-// Page imports
-// import About from "./pages/About";
+import Layout from "./components/Layout";
 import Homepage from "./pages/Homepage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Homepage />
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Homepage /> },
+    ],
   },
-  // {
-  //   path: "/about",
-  //   element: <About />,
-  // },
 ]);
 
 const App = () => {
