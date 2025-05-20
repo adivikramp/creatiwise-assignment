@@ -23,7 +23,7 @@ export function NavProjects({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
-                <item.icon />
+                <item.icon className="text-blue-600" />
                 <span className="mx-2">{item.name}</span>
               </a>
             </SidebarMenuButton>
