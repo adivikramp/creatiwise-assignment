@@ -1,3 +1,5 @@
+import { useState } from "react"
+import NavHeader from "./nav-header"
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -11,11 +13,11 @@ import {
 } from "@/components/ui/sidebar"
 import { Separator } from "./ui/separator"
 
-import NavHeader from "./nav-header"
-
 import { user, navMain, projects } from "@/data/sidebar-data";
 
 export function AppSidebar() {
+  const [activeItem, setActiveItem] = useState<string>("Create History");
+
   return (
     <Sidebar className="border-none">
       <SidebarHeader className="mb-4">
@@ -24,8 +26,8 @@ export function AppSidebar() {
         </SidebarContent>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
-        <NavProjects projects={projects} />
+        <NavMain items={navMain} activeItem={activeItem} setActiveItem={setActiveItem} />
+        <NavProjects projects={projects} activeItem={activeItem} setActiveItem={setActiveItem} />
       </SidebarContent>
       <Separator className="border border-gray-100" />
       <SidebarFooter className="py-2 px-1">
