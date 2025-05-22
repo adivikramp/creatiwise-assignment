@@ -49,14 +49,14 @@ const columns: ColumnDef<Article>[] = [
         Article Title
       </div>
     ),
-    cell: ({ row }: { row: Row<Article> }) => <div className="text-left">{row.original.title}</div>,
+    cell: ({ row }: { row: Row<Article> }) => <div className="text-xs md:text-sm text-left">{row.original.title}</div>,
     enableSorting: false,
   },
   {
     accessorKey: "keyword",
     header: "Keyword [Traffic]",
     cell: ({ row }: { row: Row<Article> }) => (
-      <div className="text-left ml-1">
+      <div className="text-xs md:text-sm text-left ml-1">
         {row.original.keyword} [{row.original.traffic.toLocaleString()}]
       </div>
     ),
@@ -65,13 +65,13 @@ const columns: ColumnDef<Article>[] = [
   {
     accessorKey: "words",
     header: "Words",
-    cell: ({ row }: { row: Row<Article> }) => <div className="text-center">{row.original.words}</div>,
+    cell: ({ row }: { row: Row<Article> }) => <div className="text-xs md:text-sm text-center">{row.original.words}</div>,
     enableSorting: true,
   },
   {
     accessorKey: "createdOn",
     header: "Created On",
-    cell: ({ row }: { row: Row<Article> }) => <div className="text-center">{row.original.createdOn}</div>,
+    cell: ({ row }: { row: Row<Article> }) => <div className="text-xs md:text-sm text-center">{row.original.createdOn}</div>,
     enableSorting: true,
   },
   {
@@ -79,7 +79,7 @@ const columns: ColumnDef<Article>[] = [
     header: "Action",
     cell: () => (
       <div className="flex justify-center">
-        <Button variant="outline" className="px-8 border-green-500 text-green-500 hover:bg-green-100 hover:text-green-600 cursor-pointer">
+        <Button variant="outline" className="px-5 md:px-8 border-green-500 text-green-500 hover:bg-green-100 hover:text-green-600 cursor-pointer">
           View
         </Button>
       </div>
@@ -92,12 +92,12 @@ const columns: ColumnDef<Article>[] = [
       <div className="flex justify-center">
         <DropdownMenu>
           <DropdownMenuTrigger className="w-auto" asChild>
-            <div className="flex items-center justify-center p-2 gap-x-4">
-              <img src="https://avatars.githubusercontent.com/u/43032789?s=48&v=4" className="rounded-full h-8" />
-              <ChevronDown className="ml-auto size-4" />
+            <div className="flex items-center justify-center p-2 gap-x-2 md:gap-x-4">
+              <img src="https://avatars.githubusercontent.com/u/43032789?s=48&v=4" className="rounded-full h-6 md:h-8" />
+              <ChevronDown className="ml-auto size-8 md:size-4" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent className="-ml-6 w-auto md:-ml-0 md:w-44">
             <DropdownMenuRadioGroup value="wordpress">
               <DropdownMenuRadioItem value="wordpress">Wordpress</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="webflow">Webflow</DropdownMenuRadioItem>
@@ -194,25 +194,27 @@ export function DataTable({ data }: { data: Article[] }) {
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-2">
-        <div className="w-full flex items-center gap-1 text-xs md:text-sm px-1 md:px-0">
-          <span> Total <span className="font-bold">{table.getFilteredRowModel().rows.length}</span> Articles Titles</span> | {" "}
-          <span>Show</span>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => table.setPageSize(Number(value))}
-          >
-            <SelectTrigger className="w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[10, 20, 30].map((size) => (
-                <SelectItem key={size} value={`${size}`}>
-                  {size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <span>entries per page</span>
+        <div className="w-full flex flex-col md:flex-row items-start md:items-center gap-1 text-xs md:text-sm px-1 md:px-0">
+          <span> Total <span className="font-bold">{table.getFilteredRowModel().rows.length}</span> Articles Titles</span> <span className="hidden md:flex">| {" "}</span>
+          <div className="flex items-center gap-1 md:gap-2 mt-2 md:mt-0">
+            <span>Show</span>
+            <Select
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => table.setPageSize(Number(value))}
+            >
+              <SelectTrigger className="w-16 md:w-20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[10, 20, 30].map((size) => (
+                  <SelectItem key={size} value={`${size}`}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span>entries per page</span>
+          </div>
         </div>
         <div className="flex text-sm w-[50px] items-center justify-center gap-x-1 mt-4 md:mt-0">
           <span className="border rounded-md bg-white text-gray-500 px-1">{table.getState().pagination.pageIndex + 1}</span> / <span>{table.getPageCount()}</span>

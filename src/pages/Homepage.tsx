@@ -93,7 +93,7 @@ const Homepage = () => {
                         </Tabs>
                     )}
                     <Input
-                        className="w-64 mx-auto shadow-sm"
+                        className="w-64 mx-auto shadow-sm text-sm md:text-md"
                         type="text"
                         placeholder="Search for Title and Keywords"
                         value={searchTerm}
