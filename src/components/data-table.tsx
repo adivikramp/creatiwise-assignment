@@ -10,22 +10,15 @@ import {
   type Table,
   flexRender,
 } from "@tanstack/react-table";
-import * as React from "react";
 import { Table as ShadcnTable, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowDownUp, ChevronDown, MoveDown, MoveUp } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { useState } from "react";
 
-interface Article {
-  id: number;
-  title: string;
-  keyword: string;
-  traffic: number;
-  words: number;
-  createdOn: string;
-}
+import type { Article } from "@/types/types";
 
 const columns: ColumnDef<Article>[] = [
   {
@@ -57,6 +50,7 @@ const columns: ColumnDef<Article>[] = [
       </div>
     ),
     cell: ({ row }: { row: Row<Article> }) => <div className="text-left">{row.original.title}</div>,
+    enableSorting: false,
   },
   {
     accessorKey: "keyword",
@@ -117,12 +111,12 @@ const columns: ColumnDef<Article>[] = [
 ];
 
 export function DataTable({ data }: { data: Article[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [pagination, setPagination] = React.useState({
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable<Article>({
     data,
@@ -152,7 +146,9 @@ export function DataTable({ data }: { data: Article[] }) {
                 >
                   <div className={`flex items-center gap-1 ${header.id === "keyword" ? "justify-start" : "justify-center"} ${header.id === "title" ? "justify-start" : "justify-center"}`}>
                     {header.id !== "select" &&
-                      header.id !== "title" && (
+                      header.id !== "title" &&
+                      header.id !== "action" &&
+                      header.id !== "publish" && (
                         <span className="mr-1">
                           {(header.column.getIsSorted() &&
                             { asc: <MoveUp size={16} />, desc: <MoveDown size={16} /> }[header.column.getIsSorted() as "asc" | "desc"]) || <ArrowDownUp size={18} />}
@@ -218,7 +214,7 @@ export function DataTable({ data }: { data: Article[] }) {
           </Select>
           <span>entries per page</span>
         </div>
-        <div className="flex text-sm w-[50px] flex items-center justify-center gap-x-1 mt-4 md:mt-0">
+        <div className="flex text-sm w-[50px] items-center justify-center gap-x-1 mt-4 md:mt-0">
           <span className="border rounded-md bg-white text-gray-500 px-1">{table.getState().pagination.pageIndex + 1}</span> / <span>{table.getPageCount()}</span>
         </div>
       </div>

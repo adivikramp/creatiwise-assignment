@@ -16,25 +16,35 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { tableData } from "@/data/table-data";
 import { useIsMobile } from "@/hooks/use-mobile";
-import * as React from "react";
+import { useState } from "react";
+
+import type { TabOption } from "@/types/types";
 
 const Homepage = () => {
     const isMobile = useIsMobile();
-    const [selectedTab, setSelectedTab] = React.useState<string>("generated-articles");
+    const [selectedTab, setSelectedTab] = useState<string>("generated-articles");
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
-    const tabOptions = [
-        { value: "generated-articles", label: "Generated Articles" },
-        { value: "published-articles", label: "Published Articles" },
-        { value: "scheduled-articles", label: "Scheduled Articles" },
-        { value: "archived-articles", label: "Archived Articles" },
+    const tabOptions: TabOption[] = [
+        { value: "generated-articles", label: "Generated Articles", style: "data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border border-gray-200 rounded-md" },
+        { value: "published-articles", label: "Published Articles", style: "data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2" },
+        { value: "scheduled-articles", label: "Scheduled Articles", style: "data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2" },
+        { value: "archived-articles", label: "Archived Articles", style: "data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2" },
     ];
+
+    const filteredData = tableData.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (Array.isArray(item.keyword) && item.keyword.some((keyword: string) =>
+            keyword.toLowerCase().includes(searchTerm.toLowerCase()))
+        )
+    );
 
     return (
         <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 md:gap-6 md:p-4">
                     <div className="relative flex items-center justify-center">
-                        <SidebarTrigger className="absolute left-2" />
+                        <SidebarTrigger className="absolute left-2 cursor-pointer" />
                         <h1 className="flex-1 text-center text-2xl md:text-3xl font-bold">Articles</h1>
                     </div>
                     {isMobile ? (
@@ -69,30 +79,16 @@ const Homepage = () => {
                             className="w-full flex flex-col items-center justify-center"
                         >
                             <TabsList className="bg-white overflow-hidden">
-                                <TabsTrigger
-                                    value="generated-articles"
-                                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border border-gray-200 rounded-md"
-                                >
-                                    Generated Articles
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="published-articles"
-                                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2"
-                                >
-                                    Published Articles
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="scheduled-articles"
-                                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2"
-                                >
-                                    Scheduled Articles
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="archived-articles"
-                                    className="data-[state=active]:bg-blue-500 data-[state=active]:text-white px-8 py-4 border-r border-t border-b border-gray-200 rounded-md -ml-2"
-                                >
-                                    Archived Articles
-                                </TabsTrigger>
+                                {tabOptions.map((tab) => (
+                                    <TabsTrigger
+                                        key={tab.value}
+                                        value={tab.value}
+                                        onClick={() => setSelectedTab(tab.value)}
+                                        className={tab.style}
+                                    >
+                                        {tab.label}
+                                    </TabsTrigger>
+                                ))}
                             </TabsList>
                         </Tabs>
                     )}
@@ -100,8 +96,10 @@ const Homepage = () => {
                         className="w-64 mx-auto shadow-sm"
                         type="text"
                         placeholder="Search for Title and Keywords"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <DataTable data={tableData} />
+                    <DataTable data={filteredData} />
                 </div>
             </div>
         </div>
